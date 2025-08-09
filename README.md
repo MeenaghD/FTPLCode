@@ -39,3 +39,5 @@ The files follow the same structure as in Main_Files. The only difference is tha
 This folder contains the various different models (Orthodox, FTPL, Orthodox Pre-GFC/FTPL Post-GFC, FTPL Pre-GFC/Orthodox Post-GFC, MUR) for the two different specifications (Corporate Rate, ZLB). 
 
 Within each subfolder, the file II_Wald.m will test the model and return the Wald statistic and the p-value. 
+
+Please ignore the files that begin ._
