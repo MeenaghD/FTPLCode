@@ -1,0 +1,30 @@
+#!/bin/sh
+
+rundir=$PWD/runfolder
+homedir=$PWD
+
+
+./collate_files
+cd $rundir
+./check_convergence
+
+ls all_model* > filenames
+wc -l filenames > nboot
+
+./calc_wald.exe
+
+mv Wald $homedir
+mv Trans $homedir
+mv nsims $homedir
+mv Pval $homedir
+
+#
+#clean up folder
+#rm -rf fort.* base.out all_model* ar_coeffs.data bgp_const.data all_diff_bgp.data resids.data shocks.data tmp coef.data act_data.data bgp_const.data ar_coeffs.data resids.data shocks.data calc_wald
+#########
+#rm -rf *
+
+cd $homedir
+#rm -rf resids.data shocks.data ar_coeffs.data bgp_const.data tmp base.out
+
+cat Wald

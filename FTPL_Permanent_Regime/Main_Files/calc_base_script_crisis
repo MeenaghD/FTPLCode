@@ -1,0 +1,57 @@
+#!/bin/sh
+
+rundir=$PWD/runfolder
+#rm -rf $rundir
+#mkdir -p $rundir
+
+#rm *.out *.err
+#rm Wald
+#rm Trans
+#cp orig_coef.data coef.data
+
+# 1. Use inflation data to find the weights for the base run.
+./calc_NKweights_base_fixed.exe
+
+
+#
+# COMPILE FORTRAN AND C++ FILES, CHANGE MODE FOR COLLATE_FILES
+#chmod 744 run_makefile
+#./run_makefile
+#chmod 744 collate_files
+
+#rm -rf tmp
+#mkdir -p tmp
+
+#./calc_shocks
+
+rm -f nlag
+rm -f lags_endog
+rm -f lags_exog
+
+cp nerror qerror
+
+# 2. Run the base run with these weights to get the Type II residuals.
+#    a. Use the data to get the ftplitch dates of the ZLB
+#    b. Therefore, there will be just one set of Type II residuals.
+echo 2 > nlag
+cp start_lags_endog lags_endog
+cp start_lags_exog lags_exog
+#
+for i in {3..234}
+        do
+                ./base_NKweights.exe
+		cp new_coef.data coef.data
+                rm -f allout.out
+                ./ftpl_base_crisis.exe < ftpl_base.data > baserun.out
+        done
+
+#cp allout.out base.out
+
+#clean up folder
+rm -f fort.* nlag lags_endog lags_exog qerror allout.out
+
+cp -r coef.data act_data.data bgp_const.data ar_coeffs.data resids.data shocks.data calc_wald check_convergence tmp $rundir
+
+
+
+

@@ -1,0 +1,7 @@
+rundir=$PWD/runfolder
+
+for i in {1..497}
+	do 
+		cp $rundir/$i/all_model$i $rundir
+	done
+

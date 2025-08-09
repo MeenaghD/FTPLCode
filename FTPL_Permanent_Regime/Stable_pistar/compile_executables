@@ -1,0 +1,15 @@
+#!/bin/sh
+
+g++ calc_NKweights_base_fixed.cpp -o calc_NKweights_base_fixed.exe
+g++ base_NKweights.cpp -o base_NKweights.exe
+g++ calc_NKweights.cpp -o calc_NKweights.exe
+g++ boot_shocks_urandom_ZLB.cpp -o boot_shocks_urandom_ZLB.exe
+g++ current_r_sign_diffbase_bgp.cpp -o current_r_sign_diffbase_bgp.exe
+
+gfortran calc_shocks.f90 -o calc_shocks.exe
+gfortran calc_wald.f90 -o calc_wald.exe
+gfortran ftpl_base_nocrisis.f -o ftpl_base_nocrisis.exe
+gfortran ftpl_sims_nocrisis.f -o ftpl_sims_nocrisis.exe
+gfortran ftpl_base_crisis.f -o ftpl_base_crisis.exe
+gfortran ftpl_sims_crisis.f -o ftpl_sims_crisis.exe
+gfortran calc_PT_levels_surplus_I1.f90 -o calc_PT_levels_surplus_I1.exe

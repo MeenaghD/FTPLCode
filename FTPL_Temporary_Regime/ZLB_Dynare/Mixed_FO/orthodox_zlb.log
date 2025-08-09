@@ -1,0 +1,24 @@
+Starting Dynare (version 6.1).
+Calling Dynare with arguments: none
+Starting preprocessing of the model file ...
+Substitution of endo lags >= 2: added 2 auxiliary variables and equations.
+Found 34 equation(s).
+Evaluating expressions...
+Computing static model derivatives (order 1).
+Normalizing the static model...
+Normalization failed with cutoff, trying symbolic normalization...
+Finding the optimal block decomposition of the static model...
+15 block(s) found:
+  12 recursive block(s) and 3 simultaneous block(s).
+  the largest simultaneous block has 18 equation(s)
+                                 and 18 feedback variable(s).
+Computing dynamic model derivatives (order 2).
+Normalizing the dynamic model...
+Finding the optimal block decomposition of the dynamic model...
+5 block(s) found:
+  2 recursive block(s) and 3 simultaneous block(s).
+  the largest simultaneous block has 18 equation(s)
+                                 and 18 feedback variable(s).
+Preprocessing completed.
+Preprocessing time: 0h00m00s.
+Total computing time : 0h00m00s

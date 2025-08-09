@@ -1,0 +1,13 @@
+dirname=`basename $PWD`
+rundir=/scratch/${USER}/${dirname}/
+
+rm all_all_NKwage_coef
+rm all_all_NKprice_coef
+
+for i in {1..500}
+	do 
+		cat $rundir/$i/all_NKwage_coef >> all_all_NKwage_coef
+		cat $rundir/$i/all_NKprice_coef >> all_all_NKprice_coef
+		
+	done
+

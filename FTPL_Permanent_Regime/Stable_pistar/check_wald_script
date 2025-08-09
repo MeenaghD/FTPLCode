@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -s SWBGGM_CalcWald.err ]
+then
+echo 1001.0000000 > Wald
+echo 1001.0000000 > Trans
+fi

@@ -1,0 +1,99 @@
+#!/bin/sh
+
+homedir=$PWD
+rm -rf $homedir/runfolder
+mkdir $homedir/runfolder
+
+for iboot in {1..1000}
+do
+
+rundir=$homedir/runfolder/$iboot
+#rm -rf $rundir
+mkdir -p $rundir
+
+#
+#cp shocks.data start_lags_endog start_lags_exog ftpl_sims.data ftpl_sims boot_shocks_urandom $rundir
+cp -r nerror shocks.data start_lags_endog start_lags_exog ftpl_sims.data ftpl_base.data ftpl_sims_nocrisis.exe ftpl_sims_crisis.exe boot_shocks_urandom_ZLB.exe coef.data ar_coeffs.data current_r_sign_diffbase_bgp.exe calc_NKweights.exe base_NKweights.exe NKweights.data calc_PT_levels_surplus_I1.exe g_sim.out r_sim.out y_sim.out NB_sim.out NBbase.data tmp base.out $rundir
+
+cd $rundir
+#ln -s /scratch/${USER}/${dirname}/tmp tmp
+
+#Use base output as starting interest rate simulation
+cp base.out allout.out
+
+rm -f nlag
+rm -f lags_endog
+rm -f lags_exog
+rm -f iterations
+rm -f all_NKwage_coef
+rm -f all_NKprice_coef
+rm -f all_MA_pi
+
+./boot_shocks_urandom_ZLB.exe $iboot
+cp bootshocks_noncrisis.data qerror
+
+echo 2 > nlag
+cp start_lags_endog lags_endog
+cp start_lags_exog lags_exog
+
+# Use data for starting weights.
+./base_NKweights.exe
+cp new_coef.data coef.data
+
+#starting with non-crisis
+echo 0.0 > zfiscal_outputgap.data
+echo 0.0 > zfiscal_pinf.data
+echo 0.0 > zfiscal_pinfgap.data
+echo 0 > r_sign
+for i in {3..234}
+        do
+# calculate PT to get pibar. Add NB and pibar to the data file
+                rm -f NBandPibar
+                ./calc_PT_levels_surplus_I1.exe
+		head -n 4598 ftpl_sims.data > ftpl_sims_updated.data
+		head -n 168 NBandPibar >> ftpl_sims_updated.data
+		tail -84 ftpl_sims.data >> ftpl_sims_updated.data
+
+# Run weighted model with new weights
+#		echo $(($i-1)) > nlag
+		cp lags_endog prev_lags_endog
+		cp lags_exog prev_lags_exog
+
+                rm -f allout.out
+                ./ftpl_sims_nocrisis.exe < ftpl_sims_updated.data > sim.out
+		echo NONCRISIS >> iterations
+		grep ITER sim.out >> iterations
+#		grep ITER sim.out
+
+## Check ZLB.
+                ./current_r_sign_diffbase_bgp
+               z_rate=$(<r_sign)
+                if [ "$z_rate" -eq 1 ]; then
+                       echo $(($i-1)) > nlag
+                       cp prev_lags_endog lags_endog
+                       cp prev_lags_exog lags_exog
+                       rm -f allout.out
+                       ./ftpl_sims_crisis.exe < ftpl_sims_updated.data > sim_fiscal.out
+                       echo ZLB >> iterations
+                       cat nlag >> iterations
+                       grep ITER sim.out >> iterations
+               fi
+
+
+		./base_NKweights.exe
+		./calc_NKweights.exe
+		cp new_coef.data coef.data
+		cat NKwage_coef >> all_NKwage_coef
+		cat NKprice_coef >> all_NKprice_coef
+		cat MA_pi >> all_MA_pi
+        done
+        
+cp allout.out all_model$iboot
+
+cd $homedir
+done
+
+
+#clean up folder
+#rm -rf fort.* nlag lags_endog lags_exog sim.out qerror bootshocks.data allout.out shocks.data start_lags_endog start_lags_exog ftpl_sims.data ftpl_sims boot_shocks_urandom ar_coeffs.data coef.data current_r current_r_sign_diffbase_bgp tmp
+

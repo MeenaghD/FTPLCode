@@ -1,0 +1,9 @@
+
+for i in {1..498}
+	do
+	grep \* all_model${i} > non_conv
+	if [[ -s non_conv ]]
+		then
+		rm all_model${i}
+	fi
+	done
